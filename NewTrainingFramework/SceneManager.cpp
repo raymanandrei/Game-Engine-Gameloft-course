@@ -8,6 +8,7 @@
 #include "Camera.h"
 #include "SceneObject.h"
 #include "ResourceManager.h"
+#include "Terrain.h"
 
 using namespace rapidxml;
 
@@ -167,6 +168,7 @@ void SceneManager::Draw(ESContext* esContext) {
 
 	for (SceneObject* object : currentSceneObjects) {
 		object->Draw(esContext);
+		object->Update();
 	}
 
 }    

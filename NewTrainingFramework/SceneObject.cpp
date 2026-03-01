@@ -33,7 +33,16 @@ void SceneObject::sendCommonData(ESContext* esContext) {
 	}
 
 	Matrix MVP = MVP.SetIdentity() * SceneManager::GetInstance()->camera.viewMatrix * SceneManager::GetInstance()->camera.perspectiveMatrix;
-	
+
+	MVP = Matrix().SetTranslation(this->position.x, this->position.y, this->position.z) * MVP;
+
+	//for (int i = 0; i < 4; i++) {
+	//	for (int j = 0; j < 4; j++) {
+	//		std::cout << MVP.m[i][j] << " ";	
+	//	}
+	//	std::cout << std::endl;
+	//}
+
 	if (this->shader->sr->matrixCamera != -1) {
 		glUniformMatrix4fv(this->shader->sr->matrixCamera, 1, GL_FALSE, (float*)MVP.m);
 	}
@@ -81,5 +90,20 @@ void SceneObject::Draw(ESContext* esContext) {
 	eglSwapBuffers(esContext->eglDisplay, esContext->eglSurface);
 }
 
-void SceneObject::Update(float deltaTime) {
+void SceneObject::Update() {
+	SceneManager* sceneManager = SceneManager::GetInstance();
+	int d = 500;
+	int dx = sceneManager->camera.position.x - this->position.x;
+	int dz = sceneManager->camera.position.z - this->position.z;
+
+	std::cout << this->model->mr->id << " " << dx << " " << dz << std::endl;
+	if (dx > d)
+		this->position.x += d;
+	else if (dx < -d)
+		this->position.x -= d;
+	if (dz > d)
+		this->position.z += d;
+	else if (dz < -d)
+		this->position.z -= d;
+	std::cout << dx << " " << dz << std::endl;
 }

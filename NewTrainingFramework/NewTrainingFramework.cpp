@@ -3,13 +3,9 @@
 #include <string>
 #include <vector>
 #include <conio.h>
-#include "Vertex.h"
-#include "Shaders.h"
-#include "Globals.h"
 #include "ResourceManager.h"
 #include "SceneManager.h"
 #include "SceneObject.h"
-#include "ReadNFG.h"
 
 #include "../Utilities/utilities.h" // if you use STL, please include this line AFTER all other include
 

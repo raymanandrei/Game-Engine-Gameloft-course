@@ -46,6 +46,11 @@ bool Model::generateModel() {
 	std::vector<Vertex>vertices;
 	std::vector<unsigned short> indices;
 
+	//this->mr->id.assign("terrain");
+	this->mr = new ModelResource();
+	this->mr->id = "terrain";
+
+
 	for (float i = (-n / 2) * d; i <= (n / 2) * d; i+=d) {
 		for (float j = (-n / 2) * d; j <= (n / 2) * d; j+=d) {
 			Vertex v;
