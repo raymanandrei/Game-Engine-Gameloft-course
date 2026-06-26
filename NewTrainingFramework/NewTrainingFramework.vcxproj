@@ -65,7 +65,7 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup>
     <_ProjectFileVersion>10.0.40219.1</_ProjectFileVersion>
-    <OutDir Condition="'$(Configuration)|$(Platform)'=='Debug-Nvidia|Win32'">$(SolutionDir)\BIN-Nvidia\</OutDir>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='Debug-Nvidia|Win32'">$(SolutionDir)BIN-Nvidia\</OutDir>
     <IntDir Condition="'$(Configuration)|$(Platform)'=='Debug-Nvidia|Win32'">$(Configuration)\</IntDir>
     <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='Debug-Nvidia|Win32'">true</LinkIncremental>
     <OutDir Condition="'$(Configuration)|$(Platform)'=='Release-Nvidia|Win32'">$(SolutionDir)\BIN-Nvidia\</OutDir>
@@ -81,7 +81,7 @@
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug-Nvidia|Win32'">
     <ClCompile>
       <Optimization>Disabled</Optimization>
-      <AdditionalIncludeDirectories>$(SolutionDir)\Include\Nvidia;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)Include\Nvidia;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <MinimalRebuild>true</MinimalRebuild>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
@@ -173,9 +173,6 @@
     <ClCompile Include="SceneManager.cpp" />
     <ClCompile Include="SceneObject.cpp" />
     <ClCompile Include="Shader.cpp" />
-    <ClCompile Include="Shaders.cpp">
-      <CompileAs Condition="'$(Configuration)|$(Platform)'=='Debug-Nvidia|Win32'">CompileAsCpp</CompileAs>
-    </ClCompile>
     <ClCompile Include="ReadNFG.cpp" />
     <ClCompile Include="SkyBox.cpp" />
     <ClCompile Include="stdafx.cpp">

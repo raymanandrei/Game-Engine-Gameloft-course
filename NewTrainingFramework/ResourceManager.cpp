@@ -19,6 +19,7 @@ ResourceManager::ResourceManager()
 
 ResourceManager::~ResourceManager()
 {
+	delete spInstance;
 	spInstance = nullptr;
 }
 

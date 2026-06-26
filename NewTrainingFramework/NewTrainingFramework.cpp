@@ -12,11 +12,13 @@
 int Init ( ESContext *esContext )
 {
 	glEnable(GL_DEPTH_TEST);
-	//glEnable(GL_BLEND);
 	glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
+	//Read all resources from xml
 	ResourceManager::GetInstance()->Init();
+	
+	//Init Scene
 	SceneManager::GetInstance()->Init();
 	
 	return 0;
@@ -24,45 +26,46 @@ int Init ( ESContext *esContext )
 
 void Key ( ESContext *esContext, unsigned char key, bool bIsPressed)
 {
-	SceneManager* sceneManager = SceneManager::GetInstance();
+	//Get scene Camera
+	Camera *camera = &SceneManager::GetInstance()->camera;
 	
 	switch (key)
 	{
 		case 'A': case 'a':
-			sceneManager->camera.moveOx(-1);
+			camera->moveOx(-1);
 			break;
 		case 'D':case'd':
-			sceneManager->camera.moveOx(1);
+			camera->moveOx(1);
 			break;
 		case 'W':case 'w':
-			sceneManager->camera.moveOz(-1);
+			camera->moveOz(-1);
 			break;
 		case 'S': case 's':
-			sceneManager->camera.moveOz(1);
+			camera->moveOz(1);
 			break ;
 		case 'Q':case 'q':
-			sceneManager->camera.moveOy(1);
+			camera->moveOy(1);
 			break;
 		case 'E': case 'e':
-			sceneManager->camera.moveOy(-1);
+			camera->moveOy(-1);
 			break;
 		case 'R': case 'r':
-			sceneManager->camera.rotateOy(-1);
+			camera->rotateOy(-1);
 			break;
 		case 'T': case 't':
-			sceneManager->camera.rotateOy(1);
+			camera->rotateOy(1);
 			break;
 		case 'Y': case 'y':
-			sceneManager->camera.rotateOx(-1);
+			camera->rotateOx(-1);
 			break;
 		case 'U': case 'u':
-			sceneManager->camera.rotateOx(1);
+			camera->rotateOx(1);
 			break;
 		case 'I': case 'i':
-			sceneManager->camera.rotateOz(-1);
+			camera->rotateOz(-1);
 			break;
 		case 'O': case 'o':
-			sceneManager->camera.rotateOz(1);
+			camera->rotateOz(1);
 			break;
 		default:
 			break;

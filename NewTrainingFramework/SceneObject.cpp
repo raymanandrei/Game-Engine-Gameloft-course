@@ -13,8 +13,6 @@ SceneObject::~SceneObject() {
 }
 
 void SceneObject::sendCommonData() {
-
-	//std::cout << SceneManager::GetInstance()->camera.position.x << " " << SceneManager::GetInstance()->camera.position.y << " " << SceneManager::GetInstance()->camera.position.z << std::endl;
 	//std::cout << "Sending common data for object ID: " << this->id << std::endl;
 	glBindBuffer(GL_ARRAY_BUFFER,this->model->vboId);
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER,this->model->iboId);

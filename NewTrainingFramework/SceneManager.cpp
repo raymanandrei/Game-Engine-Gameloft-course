@@ -60,6 +60,20 @@ void SceneManager::InitWindow(ESContext* esContext) {
 	esCreateWindow(esContext, gameName->value(), std::stoi(defaultScreenSize->first_node("width")->value()), std::stoi(defaultScreenSize->first_node("height")->value()), ES_WINDOW_RGB | ES_WINDOW_DEPTH);
 }
 
+//Reads from xml property with rgb tags
+void static readVector3ColorFromXml(Vector3 &property, xml_node<>* node) {
+	property.x = std::stof(node->first_node("r")->value());
+	property.y = std::stof(node->first_node("g")->value());
+	property.z = std::stof(node->first_node("b")->value());
+}
+
+//Reads from xml property with xyz tags
+void static readVector3XYZFromXml(Vector3& property, xml_node<>* node) {
+	property.x = std::stof(node->first_node("x")->value());
+	property.y = std::stof(node->first_node("y")->value());
+	property.z = std::stof(node->first_node("z")->value());
+}
+
 void SceneManager::Init() {
     
 	std::string xmlPath = "..\\sceneManager.xml";
@@ -84,18 +98,14 @@ void SceneManager::Init() {
 		SceneManager::spInstance->bigR = std::stof(fog->first_node("R")->value());
 		xml_node<>* color = fog->first_node("color");
 		if (color) {
-			SceneManager::spInstance->fogColor.x = std::stof(color->first_node("r")->value());
-			SceneManager::spInstance->fogColor.y = std::stof(color->first_node("g")->value());
-			SceneManager::spInstance->fogColor.z = std::stof(color->first_node("b")->value());
+			readVector3ColorFromXml(SceneManager::spInstance->fogColor, color);
 		}
 	}
 	
 	if (ligths) {
 
 		if (ligths->first_node("ambientalLigth")) {
-			SceneManager::GetInstance()->ambientalLigth.x = std::stof(ligths->first_node("ambientalLigth")->first_node("r")->value());
-			SceneManager::GetInstance()->ambientalLigth.y = std::stof(ligths->first_node("ambientalLigth")->first_node("g")->value());
-			SceneManager::GetInstance()->ambientalLigth.z = std::stof(ligths->first_node("ambientalLigth")->first_node("b")->value());
+			readVector3ColorFromXml(SceneManager::GetInstance()->ambientalLigth, ligths->first_node("ambientalLigth"));
 		}
 
 		for (xml_node<>* ligth = ligths->first_node("ligth"); ligth; ligth = ligth->next_sibling("ligth")) {
@@ -103,19 +113,13 @@ void SceneManager::Init() {
 			int id = std::stoi(ligth->first_attribute()->value());
 			std::cout << "Ligth id: " << id << '\n';
 			if (ligth->first_node("position")) {
-				newLigth->position.x = std::stof(ligth->first_node("position")->first_node("x")->value());
-				newLigth->position.y = std::stof(ligth->first_node("position")->first_node("y")->value());
-				newLigth->position.z = std::stof(ligth->first_node("position")->first_node("z")->value());
+				readVector3XYZFromXml(newLigth->position, ligth->first_node("position"));
 			}
 			if (ligth->first_node("specColor")) {
-				newLigth->specColor.x = std::stof(ligth->first_node("specColor")->first_node("r")->value());
-				newLigth->specColor.y = std::stof(ligth->first_node("specColor")->first_node("g")->value());
-				newLigth->specColor.z = std::stof(ligth->first_node("specColor")->first_node("b")->value());
+				readVector3ColorFromXml(newLigth->specColor, ligth->first_node("specColor"));
 			}
 			if (ligth->first_node("diffColor")) {
-				newLigth->diffColor.x = std::stof(ligth->first_node("diffColor")->first_node("r")->value());
-				newLigth->diffColor.y = std::stof(ligth->first_node("diffColor")->first_node("g")->value());
-				newLigth->diffColor.z = std::stof(ligth->first_node("diffColor")->first_node("b")->value());
+				readVector3ColorFromXml(newLigth->diffColor, ligth->first_node("diffColor"));
 			}
 			if (ligth->first_node("specPower")) {
 				newLigth->specPower = std::stof(ligth->first_node("specPower")->value());
@@ -133,6 +137,9 @@ void SceneManager::Init() {
 		std::cout << type << std::endl;
 		if (type == "terrain") {
 			newObject = new Terrain();
+			if (object->first_node("inaltimi")) {
+				readVector3ColorFromXml(newObject->color, object->first_node("inaltimi"));
+			}
 		}
 		else if (type == "skyBox") {
 			newObject = new SkyBox();
@@ -140,41 +147,26 @@ void SceneManager::Init() {
 		else if (type == "fire") {
 			newObject = new Fire();
 			Fire* fireObj = static_cast<Fire*>(newObject);
-			if (fireObj) 
+			if (fireObj) {
 				fireObj->u_DispMax = std::stof(object->first_node("u_DispMax")->value());
+			}
 		}
 		newObject->id = std::stoi(object->first_attribute("id")->value());
 
 		if (object->first_node("position")) {
-			newObject->position.x = std::stof(object->first_node("position")->first_node("x")->value());
-			newObject->position.y = std::stof(object->first_node("position")->first_node("y")->value());
-			newObject->position.z = std::stof(object->first_node("position")->first_node("z")->value());
+			readVector3XYZFromXml(newObject->position, object->first_node("position"));
 		}
 
 		if (object->first_node("rotation")) {
-			newObject->rotation.x = std::stof(object->first_node("rotation")->first_node("x")->value());
-			newObject->rotation.y = std::stof(object->first_node("rotation")->first_node("y")->value());
-			newObject->rotation.z = std::stof(object->first_node("rotation")->first_node("z")->value());
+			readVector3XYZFromXml(newObject->rotation, object->first_node("rotation"));
 		}
 
-
 		if (object->first_node("scale")) {
-			newObject->scale.x = std::stof(object->first_node("scale")->first_node("x")->value());
-			newObject->scale.y = std::stof(object->first_node("scale")->first_node("y")->value());
-			newObject->scale.z = std::stof(object->first_node("scale")->first_node("z")->value());
+			readVector3XYZFromXml(newObject->scale, object->first_node("scale"));
 		}
 
 		if (object->first_node("color")) {
-			std::cout << "Loading color for object ID: " << newObject->id << std::endl;
-			newObject->color.x = std::stof(object->first_node("color")->first_node("r")->value());
-			newObject->color.y = std::stof(object->first_node("color")->first_node("g")->value());
-			newObject->color.z = std::stof(object->first_node("color")->first_node("b")->value());
-		}
-
-		if (object->first_node("inaltimi")) {
-			newObject->color.x = std::stof(object->first_node("inaltimi")->first_node("r")->value());
-			newObject->color.y = std::stof(object->first_node("inaltimi")->first_node("g")->value());
-			newObject->color.z = std::stof(object->first_node("inaltimi")->first_node("b")->value());
+			readVector3ColorFromXml(newObject->color, object->first_node("color"));
 		}
 
 		if (object->first_node("followingCamera")) {
@@ -221,29 +213,19 @@ void SceneManager::Init() {
 		int shaderId = -1;
 		shaderId = std::stoi(object->first_node("shader")->value());
 
-		//std::cout << "Loading object ID: " << newObject->id << " Model ID: " << modelId << " Shader ID: " << shaderId << " Texture ID: " << std::endl;
-
 		if (modelId != -1){
-			//std::cout << resourceManager->modelResources[modelId]->file << std::endl;
 			newObject->model = resourceManager->loadModel(modelId);
 		}
 
 		if (shaderId != -1){
 			newObject->shader = resourceManager->loadShader(shaderId);
-			//std::cout << "Shader id:: " << shaderId << std::endl;
-			//std::cout << resourceManager->shaderResources[shaderId]->fs << std::endl;
-			//std::cout << "Loaded shader program ID: " << newObject->shader->programId << std::endl;
-			//std::cout << "Loaded shader vertex shader: " << newObject->shader->sr->vs << std::endl;
-			//std::cout << "Loaded shader vertex shader: " << newObject->shader->sr->fs << std::endl;
 		}
 
 		SceneManager::spInstance->currentSceneObjects.push_back(newObject);
 	}
 }
 
-void SceneManager::Draw(ESContext* esContext) {
-	//printf("Drawing scene with %d objects.\n", currentSceneObjects.size());
-	
+void SceneManager::Draw(ESContext* esContext) {	
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	glDisable(GL_CULL_FACE);
 
