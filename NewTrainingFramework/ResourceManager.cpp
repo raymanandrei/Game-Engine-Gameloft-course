@@ -9,8 +9,6 @@
 #include "Vertex.h"
 #include "ModelResource.h"
 
-using namespace rapidxml;
-
 ResourceManager* ResourceManager::spInstance = nullptr;
 
 ResourceManager::ResourceManager()
@@ -43,39 +41,34 @@ void ResourceManager::Init() {
 
 	doc.parse<0>(&buffer[0]);
 
-	xml_node<>* root = doc.first_node("resourceManager");
-	xml_node<>* models = root->first_node("models");
-	xml_node<>* shaders = root->first_node("shaders");
-	xml_node<>* textures = root->first_node("textures");
-	xml_node<>* folder = models->first_node("folder");
+	rapidxml::xml_node<>* root = doc.first_node("resourceManager");
+	rapidxml::xml_node<>* models = root->first_node("models");
+	rapidxml::xml_node<>* shaders = root->first_node("shaders");
+	rapidxml::xml_node<>* textures = root->first_node("textures");
+	rapidxml::xml_node<>* folder = models->first_node("folder");
 
-	for (xml_node<>* folder = models->first_node("folder");folder; folder = folder->next_sibling("folder")){
+	for (rapidxml::xml_node<>* folder = models->first_node("folder");folder; folder = folder->next_sibling("folder")){
 		const char* folderPath = folder->first_attribute("path")->value();
 
-		for (xml_node<>* model = folder->first_node("model");model; model = model->next_sibling("model")){
+		for (rapidxml::xml_node<>* model = folder->first_node("model");model; model = model->next_sibling("model")){
 			const int id = std::stoi(model->first_attribute("id")->value());
-			xml_node<>* file = model->first_node("file");
+			rapidxml::xml_node<>* file = model->first_node("file");
 
 			ResourceManager::spInstance->modelResources[id] = new ModelResource();
 			ResourceManager::spInstance->modelResources[id]->id = std::to_string(id);	
 			ResourceManager::spInstance->modelResources[id]->file = folderPath + std::string(file->value());
-
-			//std::cout << "Loaded model ID: " << id << " File: ";
-			//std::cout << ResourceManager::spInstance->modelResources[id]->file << std::endl;
 		}
 	}
 
 	folder = shaders->first_node("folder");
 	const char* path = folder->first_attribute("path")->value();
 
-	for (xml_node<>* shader = folder->first_node("shader");shader; shader = shader->next_sibling("shader")){
+	for (rapidxml::xml_node<>* shader = folder->first_node("shader");shader; shader = shader->next_sibling("shader")){
 		int id = std::stoi(shader->first_attribute("id")->value());
 
 		const char* vs = shader->first_node("vs")->value();
 		const char* fs = shader->first_node("fs")->value();
 		
-		//std::cout << "Loaded shader ID: " << id << " VS: " << path + std::string(vs) << " FS: " << path + std::string(fs) << std::endl;
-
 		ResourceManager::spInstance->shaderResources[id] = new ShaderResource();
 		ResourceManager::spInstance->shaderResources[id]->id = std::to_string(id);
 		ResourceManager::spInstance->shaderResources[id]->vs = path + std::string(vs);
@@ -85,7 +78,7 @@ void ResourceManager::Init() {
 	folder = textures->first_node("folder");
 	path = folder->first_attribute("path")->value();
 
-	for (xml_node<>* tex = folder->first_node("texture");tex; tex = tex->next_sibling("texture"))
+	for (rapidxml::xml_node<>* tex = folder->first_node("texture");tex; tex = tex->next_sibling("texture"))
 	{
 		int id = std::stoi(tex->first_attribute("id")->value());
 		const char* type = tex->first_attribute("type")->value();
