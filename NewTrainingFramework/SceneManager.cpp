@@ -4,7 +4,6 @@
 #include <fstream>
 #include "../Utilities/rapidxml/rapidxml.hpp"
 #include "SceneManager.h"
-#include "Globals.h"
 #include "Camera.h"
 #include "SceneObject.h"
 #include "ResourceManager.h"
@@ -12,8 +11,7 @@
 #include "SkyBox.h"
 #include "Fire.h"
 #include "Ligth.h"
-
-using namespace rapidxml;
+#include "XML.h"
 
 SceneManager* SceneManager::spInstance = nullptr;    
 
@@ -24,8 +22,6 @@ SceneManager* SceneManager::GetInstance() {
 }
 
 SceneManager::SceneManager() {
-	camera = Camera();
-	totalTime = 0;
 }
 
 SceneManager::~SceneManager() {
@@ -35,7 +31,7 @@ SceneManager::~SceneManager() {
 void SceneManager::Update(float deltaTime)
 {
 	totalTime += deltaTime;
-	if (totalTime >= Globals::frameTime) {
+	if (totalTime >= 0.008) {
 		camera.setDeltaTime(totalTime);
 		totalTime = 0;
 	}
@@ -45,7 +41,6 @@ void SceneManager::InitWindow(ESContext* esContext) {
 	std::string xmlPath = "..\\sceneManager.xml";
 
 	rapidxml::xml_document<> doc;
-	rapidxml::xml_node<>* rootNode;
 	std::ifstream xmlFile(xmlPath);
 	std::vector<char> buffer((std::istreambuf_iterator<char>(xmlFile)), std::istreambuf_iterator<char>());
 
@@ -53,25 +48,14 @@ void SceneManager::InitWindow(ESContext* esContext) {
 
 	doc.parse<0>(&buffer[0]);
 
-	xml_node<>* root = doc.first_node("sceneManager");
-	xml_node<>* gameName = root->first_node("gameName");
-	xml_node<>* defaultScreenSize = root->first_node("defaultScreenSize");
+	rapidxml::xml_node<>* root = doc.first_node("sceneManager");
+	rapidxml::xml_node<>* gameName = root->first_node("gameName");
+	rapidxml::xml_node<>* defaultScreenSize = root->first_node("defaultScreenSize");
 
-	esCreateWindow(esContext, gameName->value(), std::stoi(defaultScreenSize->first_node("width")->value()), std::stoi(defaultScreenSize->first_node("height")->value()), ES_WINDOW_RGB | ES_WINDOW_DEPTH);
-}
+	screenWidth = std::stoi(defaultScreenSize->first_node("width")->value());
+	screenHeight = std::stoi(defaultScreenSize->first_node("height")->value());
 
-//Reads from xml property with rgb tags
-void static readVector3ColorFromXml(Vector3 &property, xml_node<>* node) {
-	property.x = std::stof(node->first_node("r")->value());
-	property.y = std::stof(node->first_node("g")->value());
-	property.z = std::stof(node->first_node("b")->value());
-}
-
-//Reads from xml property with xyz tags
-void static readVector3XYZFromXml(Vector3& property, xml_node<>* node) {
-	property.x = std::stof(node->first_node("x")->value());
-	property.y = std::stof(node->first_node("y")->value());
-	property.z = std::stof(node->first_node("z")->value());
+	esCreateWindow(esContext, gameName->value(), screenWidth, screenHeight, ES_WINDOW_RGB | ES_WINDOW_DEPTH);
 }
 
 void SceneManager::Init() {
@@ -79,7 +63,6 @@ void SceneManager::Init() {
 	std::string xmlPath = "..\\sceneManager.xml";
 
 	rapidxml::xml_document<> doc;
-	rapidxml::xml_node<>* rootNode;
 	std::ifstream xmlFile(xmlPath);
 	std::vector<char> buffer((std::istreambuf_iterator<char>(xmlFile)), std::istreambuf_iterator<char>());
 
@@ -87,16 +70,16 @@ void SceneManager::Init() {
 
 	doc.parse<0>(&buffer[0]);
 
-	xml_node<>* root = doc.first_node("sceneManager");
-	xml_node<>* backgroundColor = root->first_node("backgroundColor");
-	xml_node<>* controls = root->first_node("controls");
-	xml_node<>* fog = root->first_node("fog");
-	xml_node<>* ligths = root->first_node("ligths");
+	rapidxml::xml_node<>* root = doc.first_node("sceneManager");
+	rapidxml::xml_node<>* backgroundColor = root->first_node("backgroundColor");
+	rapidxml::xml_node<>* controls = root->first_node("controls");
+	rapidxml::xml_node<>* fog = root->first_node("fog");
+	rapidxml::xml_node<>* ligths = root->first_node("ligths");
 
 	if (fog) {
 		SceneManager::spInstance->smallR = std::stof(fog->first_node("r")->value());
 		SceneManager::spInstance->bigR = std::stof(fog->first_node("R")->value());
-		xml_node<>* color = fog->first_node("color");
+		rapidxml::xml_node<>* color = fog->first_node("color");
 		if (color) {
 			readVector3ColorFromXml(SceneManager::spInstance->fogColor, color);
 		}
@@ -108,7 +91,7 @@ void SceneManager::Init() {
 			readVector3ColorFromXml(SceneManager::GetInstance()->ambientalLigth, ligths->first_node("ambientalLigth"));
 		}
 
-		for (xml_node<>* ligth = ligths->first_node("ligth"); ligth; ligth = ligth->next_sibling("ligth")) {
+		for (rapidxml::xml_node<>* ligth = ligths->first_node("ligth"); ligth; ligth = ligth->next_sibling("ligth")) {
 			Ligth* newLigth = new Ligth();
 			int id = std::stoi(ligth->first_attribute()->value());
 			std::cout << "Ligth id: " << id << '\n';
@@ -128,9 +111,9 @@ void SceneManager::Init() {
 		}
 	}
 
-	xml_node<>* objects = root->first_node("objects");
+	rapidxml::xml_node<>* objects = root->first_node("objects");
 
-	for (xml_node<>* object = objects->first_node("object"); object; object = object->next_sibling("object")) {
+	for (rapidxml::xml_node<>* object = objects->first_node("object"); object; object = object->next_sibling("object")) {
 
 		SceneObject* newObject = new SceneObject();
 		std::string type = object->first_node("type")->value();
@@ -193,14 +176,14 @@ void SceneManager::Init() {
 			newObject->model->generateModel();
 		}
 
-		xml_node<>* textureRoot = object->first_node("textures");
+		rapidxml::xml_node<>* textureRoot = object->first_node("textures");
 		int textureId = -1;
 		if (textureRoot){
-			xml_node<>* textureNode = textureRoot->first_node("texture");
-			xml_attribute<>* idAttr = textureNode->first_attribute("id");
-			for (xml_node<>* textures = textureRoot->first_node("texture"); textures; textures = textures->next_sibling("texture"))
+			rapidxml::xml_node<>* textureNode = textureRoot->first_node("texture");
+			rapidxml::xml_attribute<>* idAttr = textureNode->first_attribute("id");
+			for (rapidxml::xml_node<>* textures = textureRoot->first_node("texture"); textures; textures = textures->next_sibling("texture"))
 			{
-				xml_attribute<>* idAttr = textures->first_attribute("id");
+				rapidxml::xml_attribute<>* idAttr = textures->first_attribute("id");
 				textureId = std::stoi(idAttr->value());
 				std::cout <<"TextureID :: " << textureId << '\n';
 				std::cout << resourceManager->textureResources[textureId]->file << std::endl;

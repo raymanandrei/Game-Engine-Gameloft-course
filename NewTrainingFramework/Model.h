@@ -10,12 +10,12 @@ class Model
 
 		ModelResource* mr;
 
-		GLuint iboId;
-		GLuint wiredIboId;
-		GLuint vboId;
+		GLuint iboId = 0;
+		GLuint wiredIboId = 0;
+		GLuint vboId = 0;
 
-		int nrIndici;
-		int nrIndiciWired;
+		int nrIndici = 0;
+		int nrIndiciWired = 0;
 
 		Model();
 		~Model();

@@ -61,9 +61,6 @@
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <None Include="ReadMe.txt" />
-  </ItemGroup>
-  <ItemGroup>
     <Xml Include="..\Resources\resourceManager.xml">
       <Filter>Resource Files</Filter>
     </Xml>

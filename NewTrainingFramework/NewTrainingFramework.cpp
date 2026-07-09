@@ -9,7 +9,7 @@
 
 #include "../Utilities/utilities.h" // if you use STL, please include this line AFTER all other include
 
-int Init ( ESContext *esContext )
+int static Init ( ESContext *esContext )
 {
 	glEnable(GL_DEPTH_TEST);
 	glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
@@ -17,18 +17,20 @@ int Init ( ESContext *esContext )
 
 	//Read all resources from xml
 	ResourceManager::GetInstance()->Init();
-	
+
 	//Init Scene
 	SceneManager::GetInstance()->Init();
+
+	SceneManager::GetInstance()->camera.setDeltaTime(0.008f);
 	
 	return 0;
 }
 
-void Key ( ESContext *esContext, unsigned char key, bool bIsPressed)
+void static Key ( ESContext *esContext, unsigned char key, bool bIsPressed)
 {
 	//Get scene Camera
 	Camera *camera = &SceneManager::GetInstance()->camera;
-	
+
 	switch (key)
 	{
 		case 'A': case 'a':
@@ -72,7 +74,7 @@ void Key ( ESContext *esContext, unsigned char key, bool bIsPressed)
 	}
 }
 
-void CleanUp()
+void static CleanUp()
 {
 	SceneManager *sceneManager = SceneManager::GetInstance();
 	int objectsSize = sceneManager->currentSceneObjects.size();
@@ -82,11 +84,11 @@ void CleanUp()
 	}
 }
 
-void Update(ESContext* esContext, float deltaTime) {
+void static Update(ESContext* esContext, float deltaTime) {
 	SceneManager::GetInstance()->Update(deltaTime);
 }	
 
-void Draw(ESContext* esContext) {
+void static Draw(ESContext* esContext) {
 	SceneManager::GetInstance()->Draw(esContext);
 }
 

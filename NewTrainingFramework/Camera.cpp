@@ -1,23 +1,47 @@
 ﻿#include "stdafx.h"
+#include "../Utilities/rapidxml/rapidxml.hpp"
 #include "Camera.h"
-#include "Globals.h"
+#include "SceneManager.h"
+#include "XML.h"
+#include <fstream>
+#include <iostream>
 
 Camera::Camera()
 {
-	this->position = Vector3(0.0, 0.0, 1.0);
-	this->target = Vector3(0.0, 0.0, 0.0);
-	this->up = Vector3(0.0, 1.0, 0.0);
-	this->moveSpeed = 200.0;
-	this->rotateSpeed = 2;
-	this->nearPlane = 1;
-	this->farPlane = 30000.0;
-	this->fov =  0.78;
+	std::string xmlPath = "..\\sceneManager.xml";
+
+	rapidxml::xml_document<> doc;
+	std::ifstream xmlFile(xmlPath);
+	std::vector<char> buffer{ std::istreambuf_iterator<char>(xmlFile), std::istreambuf_iterator<char>() };
+
+	buffer.push_back('\0');
+
+	doc.parse<0>(&buffer[0]);
+
+	rapidxml::xml_node<>* cameraNode = doc.first_node("sceneManager")->first_node("cameras")->first_node("camera");
+	rapidxml::xml_node<>* cameraSize = doc.first_node("sceneManager")->first_node("defaultScreenSize");
+
+	readVector3XYZFromXml(position,cameraNode->first_node("position"));
+	readVector3XYZFromXml(target, cameraNode->first_node("target"));
+	readVector3XYZFromXml(up, cameraNode->first_node("up"));
+	moveSpeed = std::stof(cameraNode->first_node("moveSpeed")->value());
+	rotateSpeed = std::stof(cameraNode->first_node("rotationSpeed")->value());
+	nearPlane = std::stof(cameraNode->first_node("nearPlane")->value());;
+	farPlane = std::stof(cameraNode->first_node("farPlane")->value());;
+	fov = std::stof(cameraNode->first_node("fov")->value());
+	
+	std::cout << "Camera position: " << nearPlane << ", " << fov << ", " << position.z << std::endl;
 
 	zAxis = -(target - position).Normalize();
 	yAxis = up.Normalize();
 	xAxis = zAxis.Cross(yAxis).Normalize();
 	updateWorldView();
-	perspectiveMatrix.SetPerspective(fov, (float)Globals::screenWidth / Globals::screenHeight, nearPlane, farPlane);
+
+	float w = std::stof(cameraSize->first_node("width")->value());
+	float h = std::stof(cameraSize->first_node("height")->value());
+	float aspectRatio = w / h;
+
+	perspectiveMatrix.SetPerspective(fov, aspectRatio, nearPlane, farPlane);
 }
 
 Camera::~Camera()
@@ -25,12 +49,10 @@ Camera::~Camera()
 }
 
 void Camera::moveOx(GLfloat sens) {
-
 	Vector3 forward = xAxis * sens;
 	Vector3 vectorDeplasare = forward * moveSpeed * deltaTime;
 	position += vectorDeplasare;
 	target += vectorDeplasare;
-
 	updateWorldView();
 }
 
@@ -45,14 +67,12 @@ void Camera::moveOy(GLfloat sens) {
 }
 
 void Camera::moveOz(GLfloat sens) {
-
 	Vector3 forward = -(target - position).Normalize() * sens;
 	Vector3 vectorDeplasare = forward * moveSpeed * deltaTime;
 	position += vectorDeplasare;
 	target += vectorDeplasare;
 
 	updateWorldView();
-
 }
 
 void Camera::rotateOx(GLfloat sens)

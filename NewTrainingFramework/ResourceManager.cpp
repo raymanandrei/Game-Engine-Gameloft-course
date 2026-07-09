@@ -32,7 +32,6 @@ void ResourceManager::Init() {
 	ResourceManager::spInstance->textureTypes["2d"] = GL_TEXTURE_2D;	
 	ResourceManager::spInstance->textureTypes["cube"] = GL_TEXTURE_CUBE_MAP;
 
-
 	rapidxml::xml_document<> doc;
 	std::ifstream xmlFile(xmlPath);
 	std::vector<char> buffer((std::istreambuf_iterator<char>(xmlFile)), std::istreambuf_iterator<char>());

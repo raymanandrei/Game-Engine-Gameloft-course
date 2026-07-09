@@ -165,7 +165,6 @@
   <ItemGroup>
     <ClCompile Include="Camera.cpp" />
     <ClCompile Include="Fire.cpp" />
-    <ClCompile Include="Globals.cpp" />
     <ClCompile Include="Ligth.cpp" />
     <ClCompile Include="Model.cpp" />
     <ClCompile Include="NewTrainingFramework.cpp" />
@@ -183,11 +182,11 @@
     </ClCompile>
     <ClCompile Include="Terrain.cpp" />
     <ClCompile Include="Texture.cpp" />
+    <ClCompile Include="XML.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Camera.h" />
     <ClInclude Include="Fire.h" />
-    <ClInclude Include="Globals.h" />
     <ClInclude Include="Ligth.h" />
     <ClInclude Include="Model.h" />
     <ClInclude Include="ModelResource.h" />
@@ -206,6 +205,7 @@
     <ClInclude Include="Texture.h" />
     <ClInclude Include="TextureResource.h" />
     <ClInclude Include="Vertex.h" />
+    <ClInclude Include="XML.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="..\Resources\Shaders\ballShaderFS.fs" />

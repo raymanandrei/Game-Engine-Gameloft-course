@@ -14,11 +14,13 @@ class SceneManager {
 		
 		float totalTime;
 		Camera camera;
+		int screenWidth;
+		int screenHeight;
 
 		Vector3 fogColor;
 		Vector3 ambientalLigth;
-		float smallR;
-		float bigR;
+		float smallR = 0;
+		float bigR = 0;
 
 		std::vector<SceneObject*> currentSceneObjects;
 		std::unordered_map<int, Ligth*>currentSceneLights;

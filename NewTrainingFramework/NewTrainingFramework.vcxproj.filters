@@ -30,9 +30,6 @@
     <ClCompile Include="stdafx.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Globals.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="Camera.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -69,11 +66,11 @@
     <ClCompile Include="Ligth.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="XML.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Globals.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="Shaders.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -132,6 +129,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Ligth.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="XML.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

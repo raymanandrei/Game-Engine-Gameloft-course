@@ -76,9 +76,8 @@ void SceneObject::sendCommonData() {
 	}
 
 	if (this->texture.size()) {
-
-		for (int i = 0; i < this->texture.size();i++) {
-			//std::cout << "Texture with id:" << this->texture[i]->tr->id << "and file:" << this->texture[i]->tr->file << '\n';
+		int textureLen = this->texture.size();
+		for (int i = 0; i < textureLen;i++) {
 			glUniform1i(this->shader->sr->textureUniform[i], i);
 			glActiveTexture(GL_TEXTURE0 + i);
 			glBindTexture(this->texture[i]->tr->type, this->texture[i]->tr->id);

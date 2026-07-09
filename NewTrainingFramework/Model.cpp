@@ -21,7 +21,9 @@ bool Model::Load() {
 	std::vector<unsigned short> indices;
 	readNfg(mr->file,vertices,indices);
 
-	for (int i = 0; i < vertices.size(); i++) {
+	int len = vertices.size();
+
+	for (int i = 0; i < len; i++) {
 		vertices[i].color.x = 1.0f;
 		vertices[i].color.y = 0.0f;
 		vertices[i].color.z = 1.0f;
@@ -50,9 +52,11 @@ bool Model::generateModel() {
 	this->mr = new ModelResource();
 	this->mr->id = "terrain";
 
+	float lower = (float)(-n / 2) * d;
+	float upper = (float)(n / 2) * d;
 
-	for (float i = (-n / 2) * d; i <= (n / 2) * d; i+=d) {
-		for (float j = (-n / 2) * d; j <= (n / 2) * d; j+=d) {
+	for (float i = lower; i <= upper; i+=d) {
+		for (float j = lower; j <= upper; j+=d) {
 			Vertex v;
 			v.pos.x = j;
 			v.pos.y = -70.0f;

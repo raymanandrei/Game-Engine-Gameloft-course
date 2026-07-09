@@ -162,9 +162,6 @@
     <ClInclude Include="utilities.h" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="ReadMe.txt" />
-  </ItemGroup>
-  <ItemGroup>
     <Xml Include="..\Resources\resourceManager.xml" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
