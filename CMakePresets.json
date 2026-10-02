@@ -1,0 +1,17 @@
+{
+  "version": 3,
+  "configurePresets": [
+    {
+      "name": "win32-nvidia",
+      "generator": "Visual Studio 18 2026",
+      "architecture": "Win32",
+      "binaryDir": "${sourceDir}/build",
+      "cacheVariables": { "GPU_VENDOR": "Nvidia" }
+    },
+    {
+      "name": "win32-ati",
+      "inherits": "win32-nvidia",
+      "cacheVariables": { "GPU_VENDOR": "ATI" }
+    }
+  ]
+}
