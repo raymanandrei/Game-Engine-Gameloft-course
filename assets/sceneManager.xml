@@ -1,22 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <sceneManager>
-	<!-- IMPORTANT! toate tagurile si atributele de tip comment trebuie ignorate (nu le parsati)
-	le-am adaugat ca sa evit cazul de comentarii imbricate (imposibile in XML) -->
 	<gameName>My game engine</gameName>
 	<defaultScreenSize>
 		<width>1280</width>
 		<height>720</height>
-		<!--
-		se mai poate pune si:
-		<fullscreen />
-		-->
 	</defaultScreenSize>
 	<backgroundColor>
 		<r>0.0</r>
 		<g>0.0</g>
 		<b>0.0</b>
 	</backgroundColor>
-	<controls>
+	<!-- <controls>
 		<control>
 			<key>W</key>
 			<action>MOVE_CAMERA_POSITIVE_Z</action>
@@ -25,8 +19,7 @@
 			<key>S</key>
 			<action>MOVE_CAMERA_NEGATIVE_Z</action>
 		</control>
-		<!-- adaugati restul -->
-	</controls>
+	</controls> -->
 
 	<!---->
 	<!--FOG-->

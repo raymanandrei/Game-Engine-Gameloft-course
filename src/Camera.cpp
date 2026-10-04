@@ -1,5 +1,5 @@
 ﻿#include "headers/Camera.hpp"
-#include "../Utilities/rapidxml/rapidxml.hpp"
+#include "../Utilities/pugixml-1.16/pugixml.hpp"
 #include "headers/SceneManager.hpp"
 #include "headers/XML.hpp"
 #include "headers/stdafx.hpp"
@@ -8,33 +8,28 @@
 
 Camera::Camera() {
 
-  std::string xmlPath = "sceneManager.xml";
+  char *xmlPath = "sceneManager.xml";
 
-  rapidxml::xml_document<> doc;
-  std::ifstream xmlFile(xmlPath);
-  std::vector<char> buffer{std::istreambuf_iterator<char>(xmlFile), std::istreambuf_iterator<char>()};
+  pugi::xml_document doc;
+  pugi::xml_parse_result xmlFile = doc.load_file(xmlPath);
 
   if (!xmlFile) {
     std::cout << "sceneManger XML not found\n";
     return;
   }
 
-  buffer.push_back('\0');
-
-  doc.parse<0>(&buffer[0]);
-
-  rapidxml::xml_node<> *cameraNode = doc.first_node("sceneManager")->first_node("cameras")->first_node("camera");
-  rapidxml::xml_node<> *cameraSize = doc.first_node("sceneManager")->first_node("defaultScreenSize");
+  pugi::xml_node cameraNode = doc.child("sceneManager").child("cameras").child("camera");
+  pugi::xml_node cameraSize = doc.child("sceneManager").child("defaultScreenSize");
 
   printf("Create camera instance");
-  readVector3XYZFromXml(position, cameraNode->first_node("position"));
-  readVector3XYZFromXml(target, cameraNode->first_node("target"));
-  readVector3XYZFromXml(up, cameraNode->first_node("up"));
-  moveSpeed = std::stof(cameraNode->first_node("moveSpeed")->value());
-  rotateSpeed = std::stof(cameraNode->first_node("rotationSpeed")->value());
-  nearPlane = std::stof(cameraNode->first_node("nearPlane")->value());
-  farPlane = std::stof(cameraNode->first_node("farPlane")->value());
-  fov = std::stof(cameraNode->first_node("fov")->value());
+  readVector3XYZFromXml(position, cameraNode.child("position"));
+  readVector3XYZFromXml(target, cameraNode.child("target"));
+  readVector3XYZFromXml(up, cameraNode.child("up"));
+  moveSpeed = std::stof(cameraNode.child_value("moveSpeed"));
+  rotateSpeed = std::stof(cameraNode.child_value("rotationSpeed"));
+  nearPlane = std::stof(cameraNode.child_value("nearPlane"));
+  farPlane = std::stof(cameraNode.child_value("farPlane"));
+  fov = std::stof(cameraNode.child_value("fov"));
 
   std::cout << "Camera position: " << nearPlane << ", " << fov << ", " << position.z << std::endl;
 
@@ -43,13 +38,11 @@ Camera::Camera() {
   xAxis = zAxis.Cross(yAxis).Normalize();
   updateWorldView();
 
-  float w = std::stof(cameraSize->first_node("width")->value());
-  float h = std::stof(cameraSize->first_node("height")->value());
+  float w = std::stof(cameraSize.child_value("width"));
+  float h = std::stof(cameraSize.child_value("height"));
   float aspectRatio = w / h;
 
   perspectiveMatrix.SetPerspective(fov, aspectRatio, nearPlane, farPlane);
-
-  xmlFile.close();
 }
 
 Camera::~Camera() {
