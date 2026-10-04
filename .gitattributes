@@ -1,2 +1,10 @@
 *.h linguist-language=C++
 gles/** linguist-vendored
+
+*.ps1 linguist-language=PowerShell
+*.ps1 linguist-detectable=true
+
+CMakeLists.txt linguist-language=CMake
+CMakeLists.txt linguist-detectable=true
+*.cmake linguist-language=CMake
+*.cmake linguist-detectable=true
