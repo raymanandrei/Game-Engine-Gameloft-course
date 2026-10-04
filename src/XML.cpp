@@ -1,18 +1,18 @@
 #include "../Utilities/EngineMath.hpp"
-#include "../Utilities/rapidxml/rapidxml.hpp"
+#include "../Utilities/pugixml-1.16/pugixml.hpp"
 #include "stdafx.hpp"
 #include <string>
 
 // Reads from xml property with rgb tags
-void readVector3ColorFromXml(Vector3 &property, rapidxml::xml_node<> *node) {
-  property.x = std::stof(node->first_node("r")->value());
-  property.y = std::stof(node->first_node("g")->value());
-  property.z = std::stof(node->first_node("b")->value());
+void readVector3ColorFromXml(Vector3 &property, pugi::xml_node node) {
+  property.x = std::stof(node.child_value("r"));
+  property.y = std::stof(node.child_value("g"));
+  property.z = std::stof(node.child_value("b"));
 }
 
 // Reads from xml property with xyz tags
-void readVector3XYZFromXml(Vector3 &property, rapidxml::xml_node<> *node) {
-  property.x = std::stof(node->first_node("x")->value());
-  property.y = std::stof(node->first_node("y")->value());
-  property.z = std::stof(node->first_node("z")->value());
+void readVector3XYZFromXml(Vector3 &property, pugi::xml_node node) {
+  property.x = std::stof(node.child_value("x"));
+  property.y = std::stof(node.child_value("y"));
+  property.z = std::stof(node.child_value("z"));
 }

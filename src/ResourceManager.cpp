@@ -1,5 +1,5 @@
 #include "ResourceManager.hpp"
-#include "../Utilities/rapidxml/rapidxml.hpp"
+#include "../Utilities/pugixml-1.16/pugixml.hpp"
 #include "ModelResource.hpp"
 #include "Vertex.hpp"
 #include "stdafx.hpp"
@@ -21,7 +21,9 @@ ResourceManager::~ResourceManager() {
 
 void ResourceManager::Init() {
 
-  std::string xmlPath = "resourceManager.xml";
+  std::cout << "ResourceManager::Init()" << '\n';
+
+  char *xmlPath = "resourceManager.xml";
 
   ResourceManager::spInstance->textureTypes["GL_LINEAR"] = GL_LINEAR;
   ResourceManager::spInstance->textureTypes["GL_REPEAT"] = GL_REPEAT;
@@ -30,69 +32,75 @@ void ResourceManager::Init() {
   ResourceManager::spInstance->textureTypes["2d"] = GL_TEXTURE_2D;
   ResourceManager::spInstance->textureTypes["cube"] = GL_TEXTURE_CUBE_MAP;
 
-  rapidxml::xml_document<> doc;
-  std::ifstream xmlFile(xmlPath);
-  std::vector<char> buffer((std::istreambuf_iterator<char>(xmlFile)), std::istreambuf_iterator<char>());
+  pugi::xml_document doc;
+  pugi::xml_parse_result xmlFile = doc.load_file(xmlPath);
 
-  buffer.push_back('\0');
-
-  doc.parse<0>(&buffer[0]);
-
-  rapidxml::xml_node<> *root = doc.first_node("resourceManager");
-  rapidxml::xml_node<> *models = root->first_node("models");
-  rapidxml::xml_node<> *shaders = root->first_node("shaders");
-  rapidxml::xml_node<> *textures = root->first_node("textures");
-  rapidxml::xml_node<> *folder = models->first_node("folder");
-
-  for (rapidxml::xml_node<> *folder = models->first_node("folder"); folder; folder = folder->next_sibling("folder")) {
-    const char *folderPath = folder->first_attribute("path")->value();
-
-    for (rapidxml::xml_node<> *model = folder->first_node("model"); model; model = model->next_sibling("model")) {
-      const int id = std::stoi(model->first_attribute("id")->value());
-      rapidxml::xml_node<> *file = model->first_node("file");
-
-      ResourceManager::spInstance->modelResources[id] = new ModelResource();
-      ResourceManager::spInstance->modelResources[id]->id = std::to_string(id);
-      ResourceManager::spInstance->modelResources[id]->file = folderPath + std::string(file->value());
-    }
+  if (!xmlFile) {
+    std::cout << "Failed to load " << xmlPath << '\n';
   }
 
-  folder = shaders->first_node("folder");
-  const char *path = folder->first_attribute("path")->value();
+  pugi::xml_node root = doc.child("resourceManager");
+  pugi::xml_node models = root.child("models");
+  pugi::xml_node shaders = root.child("shaders");
+  pugi::xml_node textures = root.child("textures");
 
-  for (rapidxml::xml_node<> *shader = folder->first_node("shader"); shader; shader = shader->next_sibling("shader")) {
-    int id = std::stoi(shader->first_attribute("id")->value());
+  pugi::xml_node folder = models.child("folder");
+  const char *folderPath = folder.first_attribute().value();
 
-    const char *vs = shader->first_node("vs")->value();
-    const char *fs = shader->first_node("fs")->value();
+  for (pugi::xml_node model = folder.child("model"); model; model = model.next_sibling("model")) {
+    const int id = std::stoi(model.first_attribute().value());
+    std::string file = model.child_value("file");
+
+    ResourceManager::spInstance->modelResources[id] = new ModelResource();
+    ResourceManager::spInstance->modelResources[id]->id = std::to_string(id);
+    ResourceManager::spInstance->modelResources[id]->file = folderPath + file;
+  }
+
+  folder = shaders.child("folder");
+  const char *path = folder.first_attribute().value();
+
+  for (pugi::xml_node shader = folder.child("shader"); shader; shader = shader.next_sibling("shader")) {
+    int id = std::stoi(shader.first_attribute().value());
+
+    std::string vs = shader.child_value("vs");
+    std::string fs = shader.child_value("fs");
 
     ResourceManager::spInstance->shaderResources[id] = new ShaderResource();
     ResourceManager::spInstance->shaderResources[id]->id = std::to_string(id);
-    ResourceManager::spInstance->shaderResources[id]->vs = path + std::string(vs);
-    ResourceManager::spInstance->shaderResources[id]->fs = path + std::string(fs);
+    ResourceManager::spInstance->shaderResources[id]->vs = path + vs;
+    ResourceManager::spInstance->shaderResources[id]->fs = path + fs;
+
+    std::cout << ResourceManager::spInstance->shaderResources[id]->vs << " "
+              << ResourceManager::spInstance->shaderResources[id]->fs << '\n';
   }
 
-  folder = textures->first_node("folder");
-  path = folder->first_attribute("path")->value();
+  folder = textures.child("folder");
+  path = folder.first_attribute().value();
 
-  for (rapidxml::xml_node<> *tex = folder->first_node("texture"); tex; tex = tex->next_sibling("texture")) {
-    int id = std::stoi(tex->first_attribute("id")->value());
-    const char *type = tex->first_attribute("type")->value();
+  for (pugi::xml_node tex = folder.child("texture"); tex; tex = tex.next_sibling("texture")) {
+    int id = std::stoi(tex.first_attribute().value());
+    std::string type = tex.attribute("type").value();
+    std::string file = tex.child_value("file");
+
+    std::string minFilter = tex.child_value("min_filter");
+    std::string magFilter = tex.child_value("mag_filter");
+    std::string wrapS = tex.child_value("wrap_s");
+    std::string wrapT = tex.child_value("wrap_t");
 
     ResourceManager::spInstance->textureResources[id] = new TextureResource();
     ResourceManager::spInstance->textureResources[id]->id = id;
     ResourceManager::spInstance->textureResources[id]->type = ResourceManager::spInstance->textureTypes[type];
-    ResourceManager::spInstance->textureResources[id]->file = path + std::string(tex->first_node("file")->value());
+    ResourceManager::spInstance->textureResources[id]->file = path + file;
     ResourceManager::spInstance->textureResources[id]->min_filter =
-        ResourceManager::spInstance->textureTypes[tex->first_node("min_filter")->value()];
+        ResourceManager::spInstance->textureTypes[minFilter];
     ResourceManager::spInstance->textureResources[id]->mag_filter =
-        ResourceManager::spInstance->textureTypes[tex->first_node("mag_filter")->value()];
-    ResourceManager::spInstance->textureResources[id]->wrap_s =
-        ResourceManager::spInstance->textureTypes[tex->first_node("wrap_s")->value()];
-    ResourceManager::spInstance->textureResources[id]->wrap_t =
-        ResourceManager::spInstance->textureTypes[tex->first_node("wrap_t")->value()];
+        ResourceManager::spInstance->textureTypes[magFilter];
+    ResourceManager::spInstance->textureResources[id]->wrap_s = ResourceManager::spInstance->textureTypes[wrapS];
+    ResourceManager::spInstance->textureResources[id]->wrap_t = ResourceManager::spInstance->textureTypes[wrapT];
+
+    std::cout << std::string(tex.child_value("wrap_s")) << '\n';
   }
-  xmlFile.close();
+  std::cout << "ResourceManager::Init() end" << '\n';
 }
 
 Model *ResourceManager::loadModel(int id) {
