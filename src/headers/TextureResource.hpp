@@ -1,5 +1,7 @@
-#pragma once
 #include <string>
+
+#ifndef TEXTURE_RESOURCE_HPP
+#define TEXTURE_RESOURCE_HPP
 
 struct TextureResource {
 
@@ -11,3 +13,5 @@ struct TextureResource {
   GLint wrap_s;
   GLint wrap_t;
 };
+
+#endif

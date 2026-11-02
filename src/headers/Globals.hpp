@@ -1,4 +1,6 @@
-#pragma once
+
+#ifndef GLOBALS_HPP
+#define GLOBALS_HPP
 
 class Globals {
 public:
@@ -6,3 +8,5 @@ public:
   static const int screenHeight;
   static const float frameTime;
 };
+
+#endif

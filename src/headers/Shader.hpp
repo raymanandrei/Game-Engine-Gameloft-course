@@ -1,6 +1,8 @@
-#pragma once
 #include "../Utilities/utilities.hpp"
 #include "ShaderResource.hpp"
+
+#ifndef SHADER_HPP
+#define SHADER_HPP
 
 class Shader {
 public:
@@ -12,3 +14,5 @@ public:
   ShaderResource *sr;
   GLuint programId;
 };
+
+#endif

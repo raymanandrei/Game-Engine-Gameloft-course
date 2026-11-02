@@ -1,9 +1,11 @@
-#pragma once
 #include "../Utilities/utilities.hpp"
 #include "Model.hpp"
 #include "Shader.hpp"
 #include "Texture.hpp"
 #include <vector>
+
+#ifndef SCENE_OBJECT_HPP
+#define SCENE_OBJECT_HPP
 
 class SceneObject {
 public:
@@ -27,3 +29,5 @@ public:
   virtual void sendSpecificData();
   virtual void Update();
 };
+
+#endif

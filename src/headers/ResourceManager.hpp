@@ -1,4 +1,3 @@
-#pragma once
 #include "../Utilities/utilities.hpp"
 #include <string>
 #include <unordered_map>
@@ -10,6 +9,9 @@
 #include "Model.hpp"
 #include "Shader.hpp"
 #include "Texture.hpp"
+
+#ifndef RESOURCE_MANAGER_HPP
+#define RESOURCE_MANAGER_HPP
 
 class ResourceManager {
 public:
@@ -36,3 +38,5 @@ private:
   static ResourceManager *spInstance;
   ResourceManager();
 };
+
+#endif

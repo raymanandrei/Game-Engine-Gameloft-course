@@ -3,7 +3,8 @@
 // are changed infrequently
 //
 
-#pragma once
+#ifndef STDAFX_HPP
+#define STDAFX_HPP
 
 #include "targetver.hpp"
 
@@ -11,3 +12,5 @@
 #include <tchar.h>
 
 // TODO: reference additional headers your program requires here
+
+#endif

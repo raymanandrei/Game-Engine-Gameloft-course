@@ -4,6 +4,9 @@
 #include <unordered_map>
 #include <vector>
 
+#ifndef SCENE_MANAGER_HPP
+#define SCENE_MANAGER_HPP
+
 class SceneManager {
 public:
   static SceneManager *GetInstance();
@@ -31,3 +34,5 @@ private:
   SceneManager();
   static SceneManager *spInstance;
 };
+
+#endif

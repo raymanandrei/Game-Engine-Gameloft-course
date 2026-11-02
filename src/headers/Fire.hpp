@@ -1,5 +1,7 @@
-#pragma once
 #include "SceneObject.hpp"
+
+#ifndef FIRE_HPP
+#define FIRE_HPP
 
 class Fire : public SceneObject {
 public:
@@ -8,3 +10,5 @@ public:
   void Update();
   void sendSpecificData();
 };
+
+#endif
