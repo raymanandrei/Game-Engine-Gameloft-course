@@ -1,4 +1,9 @@
-#pragma once
+
+#include <GLES/gl.h>
+#include <stdafx.hpp>
+
+#ifndef SHADERS_HPP
+#define SHADERS_HPP
 
 class Shaders {
 public:
@@ -14,3 +19,5 @@ public:
   int Init(char *fileVertexShader, char *fileFragmentShader);
   ~Shaders();
 };
+
+#endif

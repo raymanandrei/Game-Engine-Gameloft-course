@@ -1,5 +1,7 @@
-#pragma once
 #include "../Utilities/utilities.hpp"
+
+#ifndef VERTEX_HPP
+#define VERTEX_HPP
 
 struct Vertex {
   Vector3 pos;
@@ -10,3 +12,5 @@ struct Vertex {
   Vector2 uv;
   Vector2 uv2;
 };
+
+#endif

@@ -1,8 +1,9 @@
-#pragma once
-
 #include "ModelResource.hpp"
 
 #include "../Utilities/utilities.hpp"
+
+#ifndef MODEL_HPP
+#define MODEL_HPP
 
 class Model {
 public:
@@ -22,3 +23,5 @@ public:
 
   bool Load();
 };
+
+#endif

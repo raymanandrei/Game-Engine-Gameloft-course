@@ -1,5 +1,7 @@
-#pragma once
 #include "SceneObject.hpp"
+
+#ifndef LIGHT_HPP
+#define LIGHT_HPP
 
 class Ligth {
 public:
@@ -10,3 +12,5 @@ public:
   Vector3 diffColor;
   float specPower = 0;
 };
+
+#endif

@@ -1,6 +1,8 @@
-#pragma once
 #include "../Utilities/EngineMath.hpp"
 #include "SceneObject.hpp"
+
+#ifndef TERRAIN_HPP
+#define TERRAIN_HPP
 
 class Terrain : public SceneObject {
 public:
@@ -11,3 +13,5 @@ public:
   int nrCells;
   Terrain();
 };
+
+#endif

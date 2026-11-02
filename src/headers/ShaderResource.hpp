@@ -1,5 +1,7 @@
-#pragma once
 #include <string>
+
+#ifndef SHADER_RESOURCE_HPP
+#define SHADER_RESOURCE_HPP
 
 struct ShaderResource {
   GLuint program, vertexShader, fragmentShader;
@@ -31,3 +33,5 @@ struct ShaderResource {
   GLint c_amb;
   GLint SpecPower;
 };
+
+#endif

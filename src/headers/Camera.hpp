@@ -1,5 +1,8 @@
-﻿#pragma once
-#include "../Utilities/utilities.hpp"
+﻿#include "../Utilities/utilities.hpp"
+
+#ifndef CAMERA_HPP
+#define CAMERA_HPP
+
 class Camera {
 public:
   Vector3 position;
@@ -40,3 +43,5 @@ public:
 
   void setDeltaTime(GLfloat);
 };
+
+#endif
